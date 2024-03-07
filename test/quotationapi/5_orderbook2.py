@@ -1,6 +1,6 @@
 import requests
 
-url = "https://api.upbit.com/v1/ticker"
+url = "https://api.upbit.com/v1/orderbook/supported_levels?markets=KRW-BTC"
 
 headers = {"accept": "application/json"}
 

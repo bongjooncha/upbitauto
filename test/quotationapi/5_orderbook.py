@@ -1,6 +1,6 @@
 import requests
 
-url = "https://api.upbit.com/v1/candles/minutes/1?market=KRW-BTC&to=2024-03-07T00:00:00&count=1"
+url = "https://api.upbit.com/v1/orderbook?markets=KRW-BTC,KRW-ETH&level=10000"
 
 headers = {"accept": "application/json"}
 
