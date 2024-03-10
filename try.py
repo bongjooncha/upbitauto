@@ -11,8 +11,11 @@ price = []
 for c in candle:
     price.append([c['opening_price'],c['high_price'],c['low_price'],c['trade_price']])
 
+# print(price)
 
-print(price[0])
-print(h_index.calculate_rsi(price,14,9))
-# rsi_value = calculate_rsi(price)
-# print("RSI 지표:", rsi_value)
+
+# print(price[0])
+# print(h_index.calculate_rsi(price,14,9))
+
+print(h_index.stocastic_fast(price,5,3))
+print(h_index.stocastic_slow(price,3,3))
