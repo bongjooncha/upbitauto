@@ -1,6 +1,6 @@
 from db_conect import db_S
-from get_price import Candles
-from get_name import name
+from API.get_price import Candles
+from API.get_name import name
 import time
 
 #db연결
