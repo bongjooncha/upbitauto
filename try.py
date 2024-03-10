@@ -12,7 +12,7 @@ for c in candle:
     price.append([c['opening_price'],c['high_price'],c['low_price'],c['trade_price']])
 
 
-
-print(h_index.calculate_rsi(price,14,5))
+print(price[0])
+print(h_index.calculate_rsi(price,14,9))
 # rsi_value = calculate_rsi(price)
 # print("RSI 지표:", rsi_value)
