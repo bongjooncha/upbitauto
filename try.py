@@ -1,21 +1,19 @@
-import datetime
-from API.get_price import Candles
-from index.line import h_index
+from API.order import get_wallet,auto_buy,auto_sell
 
-t = str(datetime.datetime.now())
-time = t[:10]+'T'+t[11:19]
+wallet = get_wallet()
+print(wallet)
 
-#코인 가격 list에 저장
-candle = Candles().min(5,"KRW-BTC",time,30)
-price = []
-for c in candle:
-    price.append([c['opening_price'],c['high_price'],c['low_price'],c['trade_price']])
+for item in wallet:
+    if item[0] == 'SOL':
+        sol_vol = item[1]
+        break
 
-# print(price)
+for item in wallet:
+    if item[0] == 'KRW':
+        krw_vol = item[1]
+        break
 
 
-# print(price[0])
-# print(h_index.calculate_rsi(price,14,9))
-
-print(h_index.stocastic_fast(price,5,3))
-print(h_index.stocastic_slow(price,3,3))
+# a= auto_sell("KRW-SOL",'500000.0',sol_vol)
+a=auto_buy("KRW-SOL",'5000','')
+print(a)
