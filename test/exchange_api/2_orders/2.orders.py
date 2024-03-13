@@ -13,11 +13,11 @@ secret_key = os.environ['secret_key']
 server_url = os.environ['server_url']
 
 params = {
-  'market': 'KRW-BTC',
-  'side': 'ask',
+  'market': 'KRW-SOL',
+  'side': 'bid',
   'ord_type': 'limit',
-  'price': '10000000000.0',
-  'volume': '0.0001'
+  'price': '100000.0',
+  'volume': '1'
 }
 query_string = unquote(urlencode(params, doseq=True)).encode("utf-8")
 
@@ -40,5 +40,5 @@ headers = {
 
 res = requests.post(server_url + '/v1/orders', json=params, headers=headers)
 a = res.json()
-
 print(a)
+print(a['volume'])

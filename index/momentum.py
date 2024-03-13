@@ -6,14 +6,14 @@ class h_index:
 
         gap_All = []      #당일 최종가-전일 최종가 저장
 
-        for i in range(period + av - 1):
+        for i in range(period + av + 1):
             gap_All.append(trade_price[i]-trade_price[i+1])
 
         rsi = []        #rsi 값 저장
         n = 0
         
         while n < av:
-            select_abs = gap_All[n+1:period+n+1]
+            select_abs = gap_All[n+1:period+n+2]
             u_p = sum(num for num in select_abs if num>0)/period
             d_p = sum(num for num in select_abs if num<0)/period
             if gap_All[n]>=0:

@@ -1,8 +1,15 @@
 import datetime
-from API.order import get_wallet,auto_buy,auto_sell
+from API.order import auto_buy,auto_sell
 from API.get_price import Candles
 from index.momentum import h_index
 from time import sleep
+
+coin_name = 'SOL'        #어떤 코인
+ticker = 15             #몇분봉
+won = '100000'          #얼마를 자동 매매 시스템에 돌릴건지
+coin = '0'
+                        #자동매매기준
+state = 0               #0 매수 대기상태, 1 매도대기 상태
 
 
 while True:
@@ -11,7 +18,7 @@ while True:
     now = t[:10]+'T'+t[11:19]
 
     #코인 가격 list에 저장
-    candle = Candles().min(15,"KRW-SOL",now,30)
+    candle = Candles().min(ticker,"KRW-"+coin_name,now,30)
     price = []
     for c in candle:
         price.append([c['opening_price'],c['high_price'],c['low_price'],c['trade_price']])
@@ -28,33 +35,28 @@ while True:
 
     sig = rsi_sig + sto_fast_sig + sto_slow_sig
 
-    wallet = get_wallet()
-    
-    for item in wallet:
-        if item[0] == 'SOL':
-            sol_vol = item[1]
-            break
 
-    for item in wallet:
-        if item[0] == 'KRW':
-            krw_vol = item[1]
-            break
-
-    state=0
-    for item in wallet:
-        if item[0] == 'SOL':
-            state = 1
-            break
-
-    if state == 1 & sig >=2: continue
-
-    elif state == 0 & sig>=2:
-        auto_buy("KRW-SOL",krw_vol,'')
+    if state == 1 & sig >=2:        #매도 대기
         continue
 
-    elif state == 1 & sig < 2:
-        auto_sell("KRW-SOL",'',sol_vol)
+    elif state == 0 & sig>=2:        #매도
+        print([rsi[0] - rsi[1],sto_fast[0] - sto_fast[1],sto_slow[0] - sto_slow[1]])
+        d=auto_buy("KRW+"+coin_name, won, '')
+        state = 1
+        coin = 0
+        won = str(float(d['volume'])*float(d['price']))
+        print(won, '매도 완료')
         continue
 
-    else: continue
+    elif state == 1 & sig < 2:       #매수
+        print([rsi[0] - rsi[1],sto_fast[0] - sto_fast[1],sto_slow[0] - sto_slow[1]])
+        d=auto_sell("KRW+"+coin_name,'',coin)
+        state = 0
+        coin = str(float(d['volume'])*float(d['price']))
+        won = 0
+        print(coin,'매수완료')
+        continue
+
+    else:                            #매수 대기
+        continue
         
