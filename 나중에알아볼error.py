@@ -5,22 +5,12 @@ from API.get_name import order_check
 from index.momentum import h_index
 from time import sleep
 
-import pyupbit
-import os
-import dotenv
-
-dotenv.load_dotenv()
-
 coin_name = 'ARB'        #어떤 코인
-ticker = 5             #몇분봉
+ticker = 15             #몇분봉
 won = '0'          #얼마를 자동 매매 시스템에 돌릴건지
-coin = '2'
+coin = '1.65'
                         #자동매매기준
 state = 1               #0 매수 대기상태, 1 매도대기 상태
-
-access = os.environ['access_key']
-secret = os.environ['secret_key']
-upbit = pyupbit.Upbit(access, secret)
 
 
 while True:
@@ -59,9 +49,9 @@ while True:
     elif state == 0 and sig>=2:        #매수
         print(state,sig)
         print([rsi[0] - rsi[1],sto_fast[0] - sto_fast[1],sto_slow[0] - sto_slow[1]])
-        b = upbit.buy_market_order("KRW-SOL", 5000)
+        d=auto_buy("KRW-"+coin_name, won, '')
         sleep(0.5)
-        coin = int(upbit.get_order(s['uuid'])['trades'][0]['volume'])
+        coin = order_check(d['uuid'])['trades'][0]['volume']
         state = 1
         won = '0'
         print(coin, '매수 완료')
@@ -70,11 +60,11 @@ while True:
     elif state == 1 and sig < 2:       #매도
         print(state,sig)
         print([rsi[0] - rsi[1],sto_fast[0] - sto_fast[1],sto_slow[0] - sto_slow[1]])
-        s = upbit.sell_market_order("KRW-ARB", 2)
+        d=auto_sell("KRW-"+coin_name,'',coin)
         state = 0
         coin = '0'
         sleep(0.5)
-        won = int(upbit.get_order(s['uuid'])['trades'][0]['funds'])
+        won = order_check(d['uuid'])['trades'][0]['funds']
         print(won,'매도 완료')
         continue
 

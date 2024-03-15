@@ -71,6 +71,7 @@ def execute_order(market, side, ord_type, price, volume):
     }
 
     res = requests.post(server_url + '/v1/orders', json=params, headers=headers)
+    print(res)
     return res.json()
 
 def auto_buy(market, price, volume): #market=모살건지, price=얼마나 살건지

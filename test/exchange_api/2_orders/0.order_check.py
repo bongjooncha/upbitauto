@@ -13,11 +13,7 @@ secret_key = os.environ['secret_key']
 server_url = os.environ['server_url']
 
 params = {
-  'market': 'KRW-SOL',
-  'side': 'bid',
-  'ord_type': 'price',
-  'price': '5000.0',
-  # 'volume': '1'
+  'uuid': '74d507a1-4b1b-42f4-bc2f-adae240510e6'
 }
 query_string = unquote(urlencode(params, doseq=True)).encode("utf-8")
 
@@ -38,8 +34,5 @@ headers = {
   'Authorization': authorization,
 }
 
-res = requests.post(server_url + '/v1/orders', json=params, headers=headers)
-print(res)
-a = res.json()
-print(a)
-print(a['volume'])
+res = requests.get(server_url + '/v1/order', params=params, headers=headers)
+print(res.json()['trades'][0]['volume'])
