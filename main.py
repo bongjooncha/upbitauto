@@ -12,9 +12,9 @@ import dotenv
 dotenv.load_dotenv()
 
 coin_name = 'ARB'        #어떤 코인
-ticker = 5             #몇분봉
+ticker = 15             #몇분봉
 won = '0'          #얼마를 자동 매매 시스템에 돌릴건지
-coin = '2'
+coin = '37'
                         #자동매매기준
 state = 1               #0 매수 대기상태, 1 매도대기 상태
 
@@ -57,25 +57,26 @@ while True:
         continue
 
     elif state == 0 and sig>=2:        #매수
-        print(state,sig)
         print([rsi[0] - rsi[1],sto_fast[0] - sto_fast[1],sto_slow[0] - sto_slow[1]])
-        b = upbit.buy_market_order("KRW-SOL", 5000)
-        sleep(0.5)
-        coin = int(upbit.get_order(s['uuid'])['trades'][0]['volume'])
+        b = upbit.buy_market_order("KRW-"+coin_name, won)
+        print(b)
+        sleep(0.1)
+        print(upbit.get_order(b['uuid']['trades'][0]))
+        print(upbit.get_order(b['uuid']['trades'][0]['volume']))
+        coin = round(float(upbit.get_order(b['uuid'])['trades'][0]['volume']),2)
         state = 1
         won = '0'
-        print(coin, '매수 완료')
+        print(coin, '개 매수 완료')
         continue
 
     elif state == 1 and sig < 2:       #매도
-        print(state,sig)
         print([rsi[0] - rsi[1],sto_fast[0] - sto_fast[1],sto_slow[0] - sto_slow[1]])
-        s = upbit.sell_market_order("KRW-ARB", 2)
+        s = upbit.sell_market_order("KRW-"+coin_name, coin)
         state = 0
         coin = '0'
-        sleep(0.5)
-        won = int(upbit.get_order(s['uuid'])['trades'][0]['funds'])
-        print(won,'매도 완료')
+        sleep(0.1)
+        won = round(float(upbit.get_order(s['uuid'])['trades'][0]['funds']))
+        print(won,'원 매도 완료')
         continue
 
     else:                            #매수 대기
