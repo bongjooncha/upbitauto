@@ -1,6 +1,6 @@
 import pyupbit
 import os, datetime, dotenv
-from time import sleep
+from time import sleep,time
 from index.momentum import h_index
 
 dotenv.load_dotenv()
@@ -16,10 +16,28 @@ coin = '37'
                         #자동매매기준
 state = 1               #0 매수 대기상태, 1 매도대기 상태
 
-# print(upbit.get_balances())
+#.get_balance는 지갑안에 얼마있는지 불러옴
+wallet = upbit.get_balances()
+wallet_list = []
+sum = 0
+for i in wallet:
+    a = i['currency']
+    number = float(i['balance'])
+    if a == 'KRW':
+        price = 1
+    else:
+        price = pyupbit.get_current_price("KRW-"+a)
+    wallet_list.append([a,number,float(price) *number])
+    sum += float(price) *number
 
-df = pyupbit.get_ohlcv("KRW-BTC")
-print(df.tail())
+
+#.get_current_price는 가장 최근 거래된 현재가를 조회
+total_price = sum
+formatted_total_price = "{:,.2f}".format(total_price)
+print("총 ", formatted_total_price, "원")
+for i in wallet_list:
+    print("{}코인은 {}개({}원)".format(i[0], i[1], "{:,.2f}".format(i[2])))
+
 
 '''
 while True:
