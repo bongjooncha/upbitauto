@@ -16,8 +16,10 @@ coin = '37'
                         #자동매매기준
 state = 1               #0 매수 대기상태, 1 매도대기 상태
 
-print(upbit.get_balances())
+# print(upbit.get_balances())
 
+df = pyupbit.get_ohlcv("KRW-BTC")
+print(df.tail())
 
 '''
 while True:
