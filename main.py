@@ -46,6 +46,7 @@ while True:
     #코인 가격 list에 저장
     candle = Candles().min(ticker,"KRW-"+coin_name,now,30)
     print(candle)
+  
     price = []
     for c in candle:
         price.append([c['opening_price'],c['high_price'],c['low_price'],c['trade_price']])
