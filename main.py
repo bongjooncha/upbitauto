@@ -2,44 +2,42 @@ import pyupbit
 import os, datetime, dotenv
 from time import sleep,time
 from index.momentum import h_index
+from apiuse.API.get_price import Candles
+from pyupbit_plus.myfunc import my_wallet
 
 dotenv.load_dotenv()
-
 access = os.environ['access_key']
 secret = os.environ['secret_key']
 upbit = pyupbit.Upbit(access, secret)
 
-coin_name = 'ARB'        #어떤 코인
-ticker = 15             #몇분봉
-won = '0'          #얼마를 자동 매매 시스템에 돌릴건지
-coin = '37'
-                        #자동매매기준
-state = 1               #0 매수 대기상태, 1 매도대기 상태
+#얼마 있는지 확인
+wallet = my_wallet()
 
-#.get_balance는 지갑안에 얼마있는지 불러옴
-wallet = upbit.get_balances()
-wallet_list = []
-sum = 0
-for i in wallet:
-    a = i['currency']
-    number = float(i['balance'])
-    if a == 'KRW':
-        price = 1
+#자동매매 변수 결정
+ticker = '15'             #몇분봉
+coin_name = input('매매에 어떤 코인을 사용할 것인가요?: ').upper()
+current_coin_num = next((coin_info[1] for coin_info in wallet if coin_info[0] == coin_name), 0)
+current_coin_price = next((coin_info[2] for coin_info in wallet if coin_info[0] == coin_name), 0)
+
+#0 매수 대기상태, 1 매도대기 상태
+state = input('보유 코인으로 시작(1), 보유 원화로 시작(0)')
+if state == 0:
+    won = float(input("얼마로 할것 인지 입력: "))
+    if won > wallet[0][1]:
+        print('입력한 금액이 보유 금액보다 큽니다.')
+        exit()
     else:
-        price = pyupbit.get_current_price("KRW-"+a)
-    wallet_list.append([a,number,float(price) *number])
-    sum += float(price) *number
+        coin_num = 0
+else:
+    won = 0
+    coin_price = float(input("코인 얼마치를 사용할 것인지 입력"))
+    coin_num = coin_price/(pyupbit.get_current_price("KRW-"+coin_name))
+    if coin_price > current_coin_price:
+        print("보유한 코인 수가 적습니다.")
+        exit()
 
 
-#.get_current_price는 가장 최근 거래된 현재가를 조회
-total_price = sum
-formatted_total_price = "{:,.2f}".format(total_price)
-print("총 ", formatted_total_price, "원")
-for i in wallet_list:
-    print("{}코인은 {}개({}원)".format(i[0], i[1], "{:,.2f}".format(i[2])))
 
-
-'''
 while True:
     sleep(0.3)
     t = str(datetime.datetime.now())
@@ -99,5 +97,3 @@ while True:
     else:                            #매수 대기
         # print(state,sig)
         continue
-
-'''
