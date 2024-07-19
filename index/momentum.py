@@ -1,4 +1,11 @@
 class h_index:
+    def moving_average(data,period):
+        trade_price = [num[3] for num in data]
+        ans = 0
+        for i in range(period):
+            ans +=(trade_price[i])
+        return ans/period
+
     
     #RSI 지표
     def calculate_rsi(data,period,av):     #data는 가격 데이터, period는 rsi 기간, av는 이평 데이터
